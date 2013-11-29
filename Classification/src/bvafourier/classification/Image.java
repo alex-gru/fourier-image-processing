@@ -1,3 +1,5 @@
+package bvafourier.classification;
+
 import java.util.ArrayList;
 
 public class Image implements Comparable<Image>{

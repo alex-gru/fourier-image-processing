@@ -1,3 +1,5 @@
+package bvafourier.classification;
+
 import java.util.ArrayList;
 import java.util.Collections;
 
