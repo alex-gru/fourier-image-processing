@@ -16,22 +16,19 @@ public class Main {
     static LinkedList<Patient> patients = new LinkedList<Patient>();
     static Connection conn;
     static LinkedList<Integer> done = new LinkedList<Integer>();
+    static LinkedList<String> patterns = new LinkedList<String>();
 
     public static void main(String[] args) throws Exception {
-        done.add(2);
-        done.add(15);
-        done.add(17); //17: custom
-        done.add(1);
-        done.add(3);
-        done.add(4);
-        done.add(5);
-        done.add(6);
-        done.add(7);
-        done.add(8);
+        patterns.add("Pit Pattern I");
+        patterns.add("Pit Pattern II");
+        patterns.add("Pit Pattern III L");
+        patterns.add("Pit Pattern III S");
+        patterns.add("Pit Pattern IV");
+        patterns.add("Pit Pattern V");
         readMappingFileAndAddPatients();
         readPatientDataAndAddToPatients();
         conn = DBConnector.getConnection();
-        insertAllPatientDataIntoDatabase(8);
+        insertAllPatientDataIntoDatabase();
     }
 
     private static void insertAllPatientDataIntoDatabase() throws Exception {
@@ -40,10 +37,10 @@ public class Main {
             patient.runInserts(conn);
         }
         long finish = System.nanoTime();
-        System.out.println("Insertion took " + ((finish - start) / Math.pow(10, 9)) / 60 + " minutes.");
+        System.out.println("Insertion in total took " + ((finish - start) / Math.pow(10, 9)) / 60 + " minutes.");
     }
 
-    private static void insertAllPatientDataIntoDatabase(int id) throws Exception {
+    private static void insertPatientDataIntoDatabase(int id) throws Exception {
         if (!done.contains(id)) {
             for (Patient patient : patients) {
                 if (patient.id == id) {
@@ -111,7 +108,12 @@ public class Main {
 
     private static void readPatientDataAndAddToPatients() throws Exception {
         File dir = new File("data");
+        File patternDir = new File("E:\\Dropbox\\UNI\\5_Semester\\Image Processing\\pit-images");
         Collection files = FileUtils.listFiles(dir,
+                new RegexFileFilter("^(.*?)"),
+                DirectoryFileFilter.DIRECTORY
+        );
+        Collection patternFiles = FileUtils.listFiles(patternDir,
                 new RegexFileFilter("^(.*?)"),
                 DirectoryFileFilter.DIRECTORY
         );
@@ -127,12 +129,21 @@ public class Main {
                     String nameWithoutDotCSV = currFile.getName().substring(0, currFile.getName().length() - 4);
                     if (nameWithoutDotCSV.equals(associatedFileNames.get(j))) {
                         String currPath = currFile.getPath();
-//                        System.out.println(currPath);
                         String[] params = currPath.split("\\\\");
+                        Iterator<File> patternIt = patternFiles.iterator();
+                        String pattern = null;
+                        while (patternIt.hasNext()) {
+                            File curr = patternIt.next();
+                            if (curr.getName().equals(nameWithoutDotCSV)) {
+                                String[] dirs = patternIt.next().getPath().split("\\\\");
+                                pattern = dirs[6];
+//                                System.out.println("Pattern: " + pattern);
+                            }
+                        }
 //                        for (String param : params) {
 //                            System.out.println("\t" + param);
 //                        }
-                        addParamsToCurrPatient(currPatient, currFile, nameWithoutDotCSV, params);
+                        addParamsToCurrPatient(currPatient, currFile, nameWithoutDotCSV, params, pattern);
                     }
                 }
             }
@@ -140,7 +151,8 @@ public class Main {
 
     }
 
-    private static void addParamsToCurrPatient(Patient currPatient, File currFile, String nameWithoutDotCSV, String[] params) throws Exception {
+    private static void addParamsToCurrPatient(Patient currPatient, File currFile, String nameWithoutDotCSV,
+                                               String[] params, String pattern) throws Exception {
         PatientData patientData = new PatientData();
         if (params[1].equals("mag")) {
             patientData.magOrPhase = 0;
@@ -159,19 +171,19 @@ public class Main {
             throw new Exception("Found unsupported directory name('Y', 'U', 'V' expected) " + params[2]);
         }
 
+        patientData.pattern = patterns.indexOf(pattern);
         patientData.nameOfImage = nameWithoutDotCSV;
-        patientData.data = new float[65536];
+        patientData.data = new float[256][256];
         BufferedReader in = new BufferedReader(new FileReader(currFile));
-        String line;
-        int position = 0;
-        while (position < 65536) {
-            line = in.readLine();
-            String[] args = line.split(",");
-            for (int k = 0; k < args.length; k++) {
-                patientData.data[position] = Float.parseFloat(args[k]);
-                position++;
+
+        String lineString;
+        for (int line = 0; line < patientData.data.length; line++) {
+            lineString = in.readLine();
+            String[] values = lineString.split(",");
+            for (int k = 0; k < values.length; k++) {
+                patientData.data[line][k] = Float.parseFloat(values[k]);
+//                System.out.println("curr Position: " + k + ", data: " + values[k]);
             }
-//            System.out.println("curr Position: " + position);
         }
         currPatient.patientDataList.add(patientData);
     }
@@ -204,13 +216,30 @@ class Patient {
     public void runInserts(Connection conn) throws Exception {
         System.out.println("------------------- Running Inserts for PATIENT-ID: " + id + " -------------------");
         for (PatientData patientData : patientDataList) {
+
             StringBuilder insert = new StringBuilder();
-            for (int pos = 0; pos < patientData.data.length; pos++) {
-                insert.append("INSERT INTO PatientData values(" + id + ", \'" + patientData.nameOfImage + "\', "
-                        + patientData.colorChannel + ", " + patientData.magOrPhase + ", " + pos + ", "
-                        + patientData.data[pos] + "); ");
+            insert.append("INSERT INTO PatientData values(").append(id).append(", \'").append(patientData
+                    .nameOfImage).append("\', ").append(patientData.colorChannel).append(", ").append(patientData
+                    .magOrPhase).append(", ").append(patientData.pattern).append(", ");
+            insert.append("'{ ");
+            for (int line = 0; line < patientData.data.length; line++) {
+                insert.append("{");
+                for (int col = 0; col < patientData.data[0].length; col++) {
+                    if (col != 255) {
+                        insert.append(patientData.data[line][col]).append(", ");
+                    } else {
+                        insert.append(patientData.data[line][col]);
+                    }
+                }
+                if (line != 255) {
+                    insert.append("}, ");
+                } else {
+                    insert.append("} ");
+                }
             }
-//            System.out.println("<<<<<<<<< " + insert.toString());
+            insert.append("}');");
+
+//            System.out.println(insert.toString());
 
             try {
                 conn.createStatement().execute(insert.toString());
@@ -225,5 +254,6 @@ class PatientData {
     String nameOfImage;
     int colorChannel;
     int magOrPhase;
-    float[] data;
+    float[][] data;
+    int pattern;
 }
