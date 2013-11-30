@@ -35,8 +35,8 @@ public class Main {
 
     private static void insertAllPatientDataIntoDatabase() throws Exception {
         long start = System.nanoTime();
-        for (Patient patient : patients) {
-            patient.runInserts(conn);
+        for (int i = 19; i < patients.size(); i++) {
+            patients.get(i).runInserts(conn);
         }
         long finish = System.nanoTime();
         System.out.println("Insertion in total took " + ((finish - start) / Math.pow(10, 9)) / 60 + " minutes.");
@@ -110,7 +110,7 @@ public class Main {
 
     private static void readPatientDataAndAddToPatients() throws Exception {
         File dir = new File("data");
-        File patternDir = new File("E:\\Dropbox\\UNI\\5_Semester\\Image Processing\\pit-images");
+        File patternDir = new File("filepath");
         Collection files = FileUtils.listFiles(dir,
                 new RegexFileFilter("^(.*?)"),
                 DirectoryFileFilter.DIRECTORY
@@ -139,12 +139,8 @@ public class Main {
                             if (curr.getName().equals(nameWithoutDotCSV)) {
                                 String[] dirs = patternIt.next().getPath().split("\\\\");
                                 pattern = dirs[6];
-//                                System.out.println("Pattern: " + pattern);
                             }
                         }
-//                        for (String param : params) {
-//                            System.out.println("\t" + param);
-//                        }
                         addParamsToCurrPatient(currPatient, currFile, nameWithoutDotCSV, params, pattern);
                     }
                 }
@@ -184,7 +180,6 @@ public class Main {
             String[] values = lineString.split(",");
             for (int k = 0; k < values.length; k++) {
                 patientData.data[line][k] = Float.parseFloat(values[k]);
-//                System.out.println("curr Position: " + k + ", data: " + values[k]);
             }
         }
         currPatient.patientDataList.add(patientData);
@@ -202,18 +197,6 @@ class Patient {
         this.id = id;
     }
 
-    public void showRandomPatientInserts() {
-
-        System.out.println("------------------- PATIENT-ID: " + id + " -------------------");
-        for (PatientData patientData : patientDataList) {
-            int random = ((int) (Math.random() * 65535));
-            String insert = "INSERT INTO PatientData values(" + id + ", \'" + patientData.nameOfImage + "\', "
-                    + patientData.colorChannel + ", " + patientData.magOrPhase + ", " + random + ", "
-                    + patientData.data[random] + ")";
-            System.out.println(insert);
-        }
-
-    }
 
     public void runInserts(Connection conn) throws Exception {
         System.out.println("------------------- Running Inserts for PATIENT-ID: " + id + " -------------------");
@@ -240,9 +223,7 @@ class Patient {
                 }
             }
             insert.append("}');");
-
 //            System.out.println(insert.toString());
-
             try {
                 conn.createStatement().execute(insert.toString());
             } catch (SQLException e) {
