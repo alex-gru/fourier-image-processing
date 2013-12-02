@@ -58,8 +58,7 @@ public class FeatureVector {
 						 + "	valueOfRingSquare	" + ringSum
 						 + "	RingMiddleValue		" + ringSum / ringCounter);
 			if (ringCounter != 0){ // { // vermeiden NAN in
-				//ringFeatureVector.add(ringSum / ringCounter);
-				
+				ringFeatureVector.add(ringSum / ringCounter);
 			}
 			tempSum += ringSum;
 			tempCounter += ringCounter;
