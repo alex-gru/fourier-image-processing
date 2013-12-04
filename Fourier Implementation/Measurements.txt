@@ -1,0 +1,5 @@
+Size of input: 65536
++----- Measure transform time using FFT - Cooley-Tukey decimation-in-time radix-2 algorithm -----+
+Transform took 0.031648897 seconds.
++----- Measure transform time using DFT -----+
+Transform took 1175.453411534 seconds.

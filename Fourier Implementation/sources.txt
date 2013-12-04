@@ -1,0 +1,8 @@
+Since there are already a ton of implementations out there and
+FT is nothing new, we decided to use existing code and adapt
+it to our needs.
+We used the following source, which contains code written by
+Nayuki Minase, the second one is published under the MIT license.
+
+http://nayuki.eigenstate.org/res/how-to-implement-the-discrete-fourier-transform/Dft.java
+http://nayuki.eigenstate.org/res/free-small-fft-in-multiple-languages/Fft.java
