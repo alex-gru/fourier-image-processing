@@ -5,7 +5,9 @@ import org.apache.commons.io.filefilter.DirectoryFileFilter;
 import org.apache.commons.io.filefilter.RegexFileFilter;
 
 import java.io.*;
+import java.sql.Array;
 import java.sql.Connection;
+import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.Iterator;
@@ -21,21 +23,37 @@ public class Main {
     static LinkedList<String> patterns = new LinkedList<String>();
 
     public static void main(String[] args) throws Exception {
-        patterns.add("Pit Pattern I");
-        patterns.add("Pit Pattern II");
-        patterns.add("Pit Pattern III L");
-        patterns.add("Pit Pattern III S");
-        patterns.add("Pit Pattern IV");
-        patterns.add("Pit Pattern V");
-        readMappingFileAndAddPatients();
-        readPatientDataAndAddToPatients();
         conn = DBConnector.getConnection();
-        insertAllPatientDataIntoDatabase();
+
+//        patterns.add("Pit Pattern I");
+//        patterns.add("Pit Pattern II");
+//        patterns.add("Pit Pattern III L");
+//        patterns.add("Pit Pattern III S");
+//        patterns.add("Pit Pattern IV");
+//        patterns.add("Pit Pattern V");
+//        readMappingFileAndAddPatients();
+//        readPatientDataAndAddToPatients();
+//        insertAllPatientDataIntoDatabase();
+
+//        trySomeArrayEntries();
+    }
+
+    private static void trySomeArrayEntries() throws SQLException {
+        ResultSet resultSet = conn.createStatement().executeQuery("select * from PATIENTDATA where imagename='AKH0008-cut-1294663808994.png' and colorchannel=3;");
+        resultSet.next();
+        resultSet.next();
+        Object array = resultSet.getArray(6).getArray();
+        Double[][] arr = (Double[][]) array;
+        for (int i = 0; i < arr.length; i++) {
+            for (int j = 0; j < arr[0].length; j++) {
+                System.out.println(arr[i][j]);
+            }
+        }
     }
 
     private static void insertAllPatientDataIntoDatabase() throws Exception {
         long start = System.nanoTime();
-        for (int i = 19; i < patients.size(); i++) {
+        for (int i = 0; i < patients.size(); i++) {
             patients.get(i).runInserts(conn);
         }
         long finish = System.nanoTime();
@@ -109,8 +127,8 @@ public class Main {
     }
 
     private static void readPatientDataAndAddToPatients() throws Exception {
-        File dir = new File("data");
-        File patternDir = new File("filepath");
+        File dir = new File("path of csv files directory");
+        File patternDir = new File("filepath of uhl's pattern images directory");
         Collection files = FileUtils.listFiles(dir,
                 new RegexFileFilter("^(.*?)"),
                 DirectoryFileFilter.DIRECTORY
@@ -137,8 +155,11 @@ public class Main {
                         while (patternIt.hasNext()) {
                             File curr = patternIt.next();
                             if (curr.getName().equals(nameWithoutDotCSV)) {
-                                String[] dirs = patternIt.next().getPath().split("\\\\");
+                                String[] dirs = curr.getPath().split("\\\\");
+//                                String[] dirs = it.next().getPath().split("\\\\");
                                 pattern = dirs[6];
+//                                System.out.println("Pattern: " + pattern);
+                                break;
                             }
                         }
                         addParamsToCurrPatient(currPatient, currFile, nameWithoutDotCSV, params, pattern);
@@ -165,8 +186,14 @@ public class Main {
             patientData.colorChannel = 1;
         } else if (params[2].equals("V")) {
             patientData.colorChannel = 2;
+        } else if (params[2].equals("R")) {
+            patientData.colorChannel = 3;
+        } else if (params[2].equals("G")) {
+            patientData.colorChannel = 4;
+        } else if (params[2].equals("B")) {
+            patientData.colorChannel = 5;
         } else {
-            throw new Exception("Found unsupported directory name('Y', 'U', 'V' expected) " + params[2]);
+            throw new Exception("Found unsupported directory name('Y', 'U', 'V', 'R', 'G', 'B' expected) " + params[2]);
         }
 
         patientData.pattern = patterns.indexOf(pattern);
