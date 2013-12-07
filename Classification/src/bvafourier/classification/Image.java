@@ -1,23 +1,18 @@
-package bvafourier.classification;
-
 import java.util.ArrayList;
 
-public class Image implements Comparable<Image>{
+public class Image implements Comparable<Image>,java.io.Serializable{
 	
-	private String picName;
+	private static final long serialVersionUID = 1L;
+	private String imgName;
 	private int patientID;
 	private int patternClass;
 	private int determinedClass;
+	private int magOrPhase;
+	private int colorChannel;
 	private Double distance = Double.MAX_VALUE;
 	private boolean error = false;
 	
-	private double [][] yMagnitude;
-	private double [][] uMagnitude;
-	private double [][] vMagnitude;
-	
-	private double [][] yPhase;
-	private double [][] uPhase;
-	private double [][] vPhase;
+	private Double [][] image;
 	
 	private ArrayList<Double> featureVector;
 	
@@ -27,12 +22,12 @@ public class Image implements Comparable<Image>{
     }
 	
 	////////////getter and setter methods
-	public String getPicName() {
-		return picName;
+	public String getImgName() {
+		return imgName;
 	}
 
-	public void setPicName(String picName) {
-		this.picName = picName;
+	public void setImgName(String imgName) {
+		this.imgName = imgName;
 	}
 
 	public int getPatternClass() {
@@ -59,54 +54,6 @@ public class Image implements Comparable<Image>{
 		this.distance = distance;
 	}
 
-	public double [][] getyMagnitude() {
-		return yMagnitude;
-	}
-
-	public void setyMagnitude(double [][] yMagnitude) {
-		this.yMagnitude = yMagnitude;
-	}
-
-	public double [][] getuMagnitude() {
-		return uMagnitude;
-	}
-
-	public void setuMagnitude(double [][] uMagnitude) {
-		this.uMagnitude = uMagnitude;
-	}
-
-	public double [][] getvMagnitude() {
-		return vMagnitude;
-	}
-
-	public void setvMagnitude(double [][] vMagnitude) {
-		this.vMagnitude = vMagnitude;
-	}
-
-	public double [][] getyPhase() {
-		return yPhase;
-	}
-
-	public void setyPhase(double [][] yPhase) {
-		this.yPhase = yPhase;
-	}
-
-	public double [][] getuPhase() {
-		return uPhase;
-	}
-
-	public void setuPhase(double [][] uPhase) {
-		this.uPhase = uPhase;
-	}
-
-	public double [][] getvPhase() {
-		return vPhase;
-	}
-
-	public void setvPhase(double [][] vPhase) {
-		this.vPhase = vPhase;
-	}
-
 	public ArrayList<Double> getFeatureVector() {
 		return featureVector;
 	}
@@ -129,5 +76,29 @@ public class Image implements Comparable<Image>{
 
 	public void setError(boolean error) {
 		this.error = error;
+	}
+
+	public Double [][] getImage() {
+		return image;
+	}
+
+	public void setImage(Double [][] image) {
+		this.image = image;
+	}
+
+	public int getMagOrPhase() {
+		return magOrPhase;
+	}
+
+	public void setMagOrPhase(int magOrPhase) {
+		this.magOrPhase = magOrPhase;
+	}
+
+	public int getColorChannel() {
+		return colorChannel;
+	}
+
+	public void setColorChannel(int colorChannel) {
+		this.colorChannel = colorChannel;
 	}
 }
