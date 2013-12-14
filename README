@@ -1,1 +1,21 @@
 This is the repository used for the course "Image Processing" at CoSy, University of Salzburg.
+
+TODO bis 13. Jaenner 2014
+
+entw. oder:
+* Varianz/Standardabweichung statt Mittelwert bei FV-Koordinaten Berechnung in einem Ring (done?)
+
+sicher:
+* Filterung fehlt noch
+* Ergebnis analysieren
+* Ergebnis kombinieren und als FV verwenden:
+	- Magnitude von Rot + .....
+	-> wie sinnvoll kombinieren?
+	-> features kombinieren, die unterschiedl. Fehler machen
+	-> niicht solche kombinieren, die die gleichen Fehler machen
+* k = 1, k = 2 f. KNN noch verwenden
+* was bedeuten die Kuchenstuecke? vllt rotieren?
+* was heisst die Invarianz beim Phasenvektor?
+* FFT in Theorie/SW erklaeren
+
+----
