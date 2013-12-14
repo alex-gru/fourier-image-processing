@@ -153,17 +153,19 @@ public class FeatureVector {
 				sum = sum + pic[line][col]+ pic[size - line - 1][size - col - 1]; // 45...225
 				counter += 2;
 				
-				sumQuadrat1=sumQuadrat1+ Math.pow(pic[line][size - col],2)+Math.pow(pic[size - line - 1][col],2);
-				sum1 = sum1 + pic[line][size - col] + pic[size - line - 1][col];
+				sumQuadrat1=sumQuadrat2+Math.pow(pic[radius - line - 1][size+radius-col-1],2)+Math.pow(pic[radius + line][col-radius],2);
+				sum1 = sum1 + pic[radius - line - 1][size+radius-col-1]+ pic[radius + line][col-radius];
 				counter1 += 2;
 				
-				sumQuadrat2=sumQuadrat2+Math.pow(pic[radius - line - 1][col - 1],2)+Math.pow(pic[radius + line][size - col],2);
-				sum2 = sum2 + pic[radius - line - 1][col - 1]+ pic[radius + line][size - col];
-				counter2 += 2;
+				sumQuadrat2= sumQuadrat2+Math.pow(pic[radius - line - 1][size - col],2)+Math.pow(pic[radius + line][size+radius-col-1],2);
+				sum2 = sum2 + pic[radius - line - 1][col-radius]+ pic[radius + line][size+radius-col-1];
+				counter2 += 2; 
 				
-				 sumQuadrat3= sumQuadrat3+Math.pow(pic[radius - line - 1][size - col],2)+Math.pow(pic[radius + line][col - 1],2);
-				sum3 = sum3 + pic[radius - line - 1][size - col]+ pic[radius + line][col - 1];
+				 sumQuadrat3= sumQuadrat3+Math.pow(pic[line][size - col-1],2)+Math.pow(pic[size- line][col],2);
+				sum3 = sum3 + pic[line][size - col-1]+ pic[size- line][col];
 				counter3 += 2;
+				
+				
 			}
 		}
 		System.out.println("sum45grad...	"+sum+"	pixel45grad...	"+counter+ "	quqdratSum...	"+ sumQuadrat+"\n"+
@@ -209,7 +211,7 @@ public class FeatureVector {
 		double arr[][]=new double[256][256]; 
 		for (int i=0;i<256;i++){
 			for (int j=0;j<256;j++){
-			arr[i][j]=j;
+			arr[i][j]=i+2*j*j;
 		//	System.out.print(arr[i][j]+"	");
 		}
 		System.out.println();
