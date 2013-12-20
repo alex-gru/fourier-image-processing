@@ -1,8 +1,14 @@
 
 
 /**
-	
-@@@@@@@@@@@@@@@@@
+##Wir haben hier nur zwei methode, die relevant für unsere Aufgabe sind.
+die erste ist extractVector(double[][] arr) liefert eine arraylist zurück. dieser ArrayList enthält sechs Arraylists, die die koordinate von Feature vactor in verschiedenen varianten enthalten.
+
+####die zweite ist extractWedge(double[][] arr) , liefert auch ein Arraylist zurück.dieser ArrayList enthält drei Arraylists, die die Koordinate von feature vektor als kuchenstück , in den Varianten mittelwert,variance und standardabweichungen enthalten.
+
+### Main Methode ist nicht brauchbar, kann beim Bedarf auskommentiert werden
+
+#### Die Bandbreit (BANDWIDTH), könnten wir zu 16 oder 32 setzen, damit wir ein kürzere feature vector bekommen, und villeicht dadurch, die fehlerrate verbessern. 
 
 **/
 
@@ -16,9 +22,9 @@ import java.util.ArrayList;
 public class FeatureVector {
 
 	ArrayList<ArrayList<Double>> Allfeatures;
-	final int BANDWIDTH = 32; // deep of a Ring must be constant and a power two
-
-	static double gefunden,s;//nur debug
+	final int BANDWIDTH = 16; // deep of a Ring must be constant and a power two
+	static double gefunden,s;//nur für debug
+	
 	private ArrayList<ArrayList<Double>> extractVector(double[][] pic) {
 
 		int picSize = pic[0].length;
@@ -74,10 +80,7 @@ public class FeatureVector {
 					}
 				}
 			}
-	/*		System.out.println("square size....." + picSize + "pixel \n"
-					+ "ringSquare	" + ringCounter + "	pixel	"
-					+ "	valueOfRingSquare	" + ringSum + "	RingMiddleValue		"
-					+ ringSum / ringCounter+ "	sumQuadrat	"+ringSumQuadrat); */
+			
 			if (ringCounter != 0)  { // vermeiden NAN in
 				ringFeatureVector.add(ringSum / ringCounter);
 				ringVariance.add((ringSumQuadrat-(ringCounter*Math.pow(ringSum / ringCounter,2)))/(ringCounter-1));
@@ -92,11 +95,8 @@ public class FeatureVector {
 				variance.add((tempSumQuadrat-(tempCounter*Math.pow(tempSum /tempCounter,2)))/(tempCounter-1));
 				standAbweichung.add( Math.sqrt((tempSumQuadrat-(tempCounter*Math.pow(tempSum /tempCounter,2)))/(tempCounter-1)));
 			}
-/*			System.out.println("fullSquare	" + tempCounter + "	pixel	"
-					+ "	ValueOfSquare		" + tempSum + "	 FullMiddleValue	"
-					+ tempSum / tempCounter + "	sumQuadrat	"+tempSumQuadrat+"\n"); */
 		}
-		gefunden=tempSum; //nur debug
+		gefunden=tempSum; //nur für debug
 		
 		Allfeatures.add(ringFeatureVector);
 		Allfeatures.add(ringVariance);
@@ -104,18 +104,17 @@ public class FeatureVector {
 		Allfeatures.add(featureVector);
 		Allfeatures.add(variance);
 		Allfeatures.add(standAbweichung);
-
-		System.out.println("@@ RingMittelwert[0]...@@RingVariance[1]...@@RingStdAb[2]...@@FullMittelwert[3]...@@FullVariance[4]...@@@FullstdAb[5] \n");
+ // zeile 101 bis 107 nur ausgabe für veranschaulichen 
+		System.out.println("\n	@@ RingMittelwert[0]...@@RingVariance[1]...@@RingStdAb[2]...@@FullMittelwert[3]...@@FullVariance[4]...@@@FullstdAb[5] \n");
 		int i = 0;
 		while (!Allfeatures.isEmpty() && i < Allfeatures.size()) {
 			System.out.println("feature[" + i + "]..." + Allfeatures.get(i) );
 			i++;
-		}
+		} 
 		
 		return Allfeatures;
 	}
-
- 
+	
 	private ArrayList<ArrayList<Double>> extractWedge(double[][] pic) {
 
 		int size = pic[0].length;
@@ -152,8 +151,7 @@ public class FeatureVector {
 			rightDiagonale += pic[size - 1 - i][i] + pic[i][size - 1 - i];
 			diagr+=2;
 		}
-	//	double var=(sumQuadratrightdiag-(size*Math.pow(rightDiagonale / size,2)))/(size-1);
-	//	double stab= Math.sqrt((sumQuadratleftdiag-(size*Math.pow(leftDiagonale / size,2)))/(size-1));
+
 		variance.add((sumQuadratleftdiag-(size*Math.pow(leftDiagonale / size,2)))/(size-1));
 		variance.add((sumQuadratrightdiag-(size*Math.pow(rightDiagonale / size,2)))/(size-1));
 		StandardAbweichung.add(Math.sqrt((sumQuadratleftdiag-(size*Math.pow(leftDiagonale / size,2)))/(size-1)));
@@ -184,14 +182,7 @@ public class FeatureVector {
 				
 			}
 		}
-		s=sum+sum1+sum2+sum3+rightDiagonale+leftDiagonale ;//nur debug
-	/*	System.out.println("sum45grad...	"+sum+"	pixel45grad...	"+counter+ "	quqdratSum...	"+ sumQuadrat+"\n"+
-				"sum90grad...	"+sum3+"	pixel90grad...	"+counter3+ "	quadratSum3...	"+ sumQuadrat3+ "\n"+
-				"sum135grad...	"+sum2+"	pixel135grad...	"+counter2+ "	quadratSum2...	"+ sumQuadrat2+"\n"+
-				"sum180grad...	"+sum1+"	pixel180grad...	"+counter1+ "	quadratSum1...	"+ sumQuadrat1+"\n"+
-				"leftdiag...	"+leftDiagonale+"		pixelldiag...	"+diagl+ "	quqdratSumLeftdiag...	"+ sumQuadratleftdiag+"\n"+
-				"righttdiag...	"+ rightDiagonale+"		pixelrdiag...	"+diagr+ "	quqdratSumRightdiag...	"+ sumQuadratrightdiag);
-		*/System.out.println();
+		s=sum+sum1+sum2+sum3+rightDiagonale+leftDiagonale ;//nur für debug
 		
 		variance.add((sumQuadrat-(counter*Math.pow(sum / counter,2)))/(counter -1));
 		variance.add((sumQuadrat1-(counter1*Math.pow(sum1 / counter1,2)))/(counter1 -1));
@@ -208,8 +199,8 @@ public class FeatureVector {
 		featureVector.add(sum2 / counter2);
 		featureVector.add(sum3 / counter3);
 		int i = 0;
-		
-		System.out.println("@@@@  WedgeMittelwert				 @@@@ wedgeStdAb						 @@@@ WedgeVariance\n");
+		 // zeile 197 bis 203 nur ausgabe für veranschaulichen
+		System.out.println("	@@@@  WedgeMittelwert				 @@@@ wedgeStdAb					@@@@ WedgeVariance\n");
 		while (!featureVector.isEmpty() && i < featureVector.size()) {
 			System.out.println("Mittelwert[" + i + "]..." + featureVector.get(i)+ "		StandardAbweichung["+i+"]..."+StandardAbweichung.get(i)+"		variance["+i+"]..."+variance.get(i));
 			i++;
@@ -230,36 +221,33 @@ public class FeatureVector {
 		}
 		System.out.println();
 	}
-
+// Main methode Nicht relevant für die Aufgabe nur für debug
 	public static void main(String[] args) {
 		FeatureVector fv = new FeatureVector();
 		double arr[][]=new double[256][256]; 
 		double total=0; 
 		for (int i=0;i<256;i++){
 			for (int j=0;j<256;j++){
-			arr[i][j]=Math.random();
+			arr[i][j]= (2*i*j+5*j*j/4)/(i+j+15);	// Math.random();
 			total+=arr[i][j];
 		//	System.out.print(arr[i][j]+"");
 		}
-		System.out.println();	
 		}
 
 		long start1 = System.currentTimeMillis();
 		fv.extractVector(arr);
-		//fv.featurevector(arr);
 		long stop1 = System.currentTimeMillis();
 		long time1 = stop1 - start1;
-		System.out.println("Extract process time = ..........." + time1+"	ms\n" +
-		 " summe of values found =..." + gefunden + "\n	sum of values stored=..." +total +
-		"\n----------------------------------------------------------------------------------\n");
-			long start = System.currentTimeMillis();
-		//fv.extractVector(arr);
+		System.out.println("	Extract process time = ..........." + time1+" ms\n" +
+		 "	summe of values found =..." + gefunden + "\n	sum of values stored=..." +total 
+		+"\n	difference..."+(total-gefunden )+ "\n----------------------------------------------------------------------------------\n");
+		long start = System.currentTimeMillis();
 		fv.extractWedge(arr);
 		long stop = System.currentTimeMillis();
 		long time = stop - start;
-		System.out.println( "Wedge process time = ..........." + time +"	ms");
-		System.out.println(" summe of values found =..." + s+"\n sum of values stored=..."+total+"\n"
-			+"------------------------------------------------------------------------------------\n"  );
+		System.out.println( "	Wedge process time = ..........." + time +"	ms");
+		System.out.println("	summe of values found =..." + s+"\n	sum of values stored=..."+total+"\n"
+			+ "	difference...	"+(total-s)+"\n------------------------------------------------------------------------------------\n"  );
 	}
 
 }
