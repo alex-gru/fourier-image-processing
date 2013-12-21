@@ -2,7 +2,7 @@
 
 /**
 ##Wir haben hier nur zwei methode, die relevant für unsere Aufgabe sind.
-die erste ist extractVector(double[][] arr) liefert eine arraylist zurück. dieser ArrayList enthält sechs Arraylists, die die koordinate von Feature vactor in verschiedenen varianten enthalten.
+die erste ist extractVector(double[][] arr) liefert eine arraylist zurück. dieser ArrayList enthält sechs Arraylists, die die koordinate von Feature vektor in verschiedenen varianten enthalten.
 
 ####die zweite ist extractWedge(double[][] arr) , liefert auch ein Arraylist zurück.dieser ArrayList enthält drei Arraylists, die die Koordinate von feature vektor als kuchenstück , in den Varianten mittelwert,variance und standardabweichungen enthalten.
 
@@ -22,7 +22,7 @@ import java.util.ArrayList;
 public class FeatureVector {
 
 	ArrayList<ArrayList<Double>> Allfeatures;
-	final int BANDWIDTH = 16; // deep of a Ring must be constant and a power two
+	final int BANDWIDTH = 32; // deep of a Ring must be constant and a power two
 	static double gefunden,s;//nur für debug
 	
 	private ArrayList<ArrayList<Double>> extractVector(double[][] pic) {
@@ -239,7 +239,7 @@ public class FeatureVector {
 		long stop1 = System.currentTimeMillis();
 		long time1 = stop1 - start1;
 		System.out.println("	Extract process time = ..........." + time1+" ms\n" +
-		 "	summe of values found =..." + gefunden + "\n	sum of values stored=..." +total 
+		 "	sum of values found =..." + gefunden + "\n	sum of values stored=..." +total 
 		+"\n	difference..."+(total-gefunden )+ "\n----------------------------------------------------------------------------------\n");
 		long start = System.currentTimeMillis();
 		fv.extractWedge(arr);
