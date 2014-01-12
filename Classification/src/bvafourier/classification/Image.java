@@ -14,7 +14,7 @@ public class Image implements Comparable<Image>,java.io.Serializable{
 	
 	private Double [][] image;
 	
-	private ArrayList<Double> featureVector;
+	private ArrayList<ArrayList<Double>> featureVectors;
 	
 	@Override
 	public int compareTo(Image img) {
@@ -54,12 +54,12 @@ public class Image implements Comparable<Image>,java.io.Serializable{
 		this.distance = distance;
 	}
 
-	public ArrayList<Double> getFeatureVector() {
-		return featureVector;
+	public ArrayList<ArrayList<Double>> getFeatureVectors() {
+		return featureVectors;
 	}
 
-	public void setFeatureVector(ArrayList<Double> featureVector) {
-		this.featureVector = featureVector;
+	public void setFeatureVector(ArrayList<ArrayList<Double>> featureVectors) {
+		this.featureVectors = featureVectors;
 	}
 
 	public int getPatientID() {
