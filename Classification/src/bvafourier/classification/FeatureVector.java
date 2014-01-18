@@ -8,7 +8,6 @@ public class FeatureVector {
 		int squareSize = 0;
 
 		ArrayList<Double> averageVector = new ArrayList<Double>();
-		ArrayList<Double> stdDevationVector = new ArrayList<Double>();
 		ArrayList<Double> varianceVector = new ArrayList<Double>();
 
 		ArrayList<ArrayList<Double>> squareVector = new ArrayList<ArrayList<Double>>();
@@ -57,13 +56,11 @@ public class FeatureVector {
 			if (ringCounter != 0)  { // vermeiden NAN in
 				averageVector.add(ringSum / ringCounter);
 				varianceVector.add((ringSumQuadrat-(ringCounter*Math.pow(ringSum / ringCounter,2)))/(ringCounter-1));
-				stdDevationVector.add(Math.sqrt((ringSumQuadrat-(ringCounter*Math.pow(ringSum / ringCounter,2)))/(ringCounter-1)));
 			}
 		}
 		
 		squareVector.add(averageVector);
 		squareVector.add(varianceVector);
-		squareVector.add(stdDevationVector);
 		return squareVector;
 	}
 	
@@ -74,7 +71,6 @@ public class FeatureVector {
 		Double tempSumQuadrat = 0.0;
 		int tempCounter = 0;
 		ArrayList<Double> averageVector = new ArrayList<Double>();
-		ArrayList<Double> standAbweichung = new ArrayList<Double>();
 		ArrayList<Double> varianceVector= new ArrayList<Double>();
 		ArrayList<ArrayList<Double>> fullSquareVector = new ArrayList<ArrayList<Double>>();
 		for (int i = picSize / 2; i >= 0; squareSize += 2 * bandwith, i = i - bandwith) {
@@ -126,13 +122,11 @@ public class FeatureVector {
 			if (tempCounter != 0) { // vermeiden NAN in
 				averageVector.add(tempSum / tempCounter);
 				varianceVector.add((tempSumQuadrat-(tempCounter*Math.pow(tempSum /tempCounter,2)))/(tempCounter-1));
-				standAbweichung.add( Math.sqrt((tempSumQuadrat-(tempCounter*Math.pow(tempSum /tempCounter,2)))/(tempCounter-1)));
 			}
 		}
 
 		fullSquareVector.add(averageVector);
 		fullSquareVector.add(varianceVector);
-		fullSquareVector.add(standAbweichung);
 		
 		return fullSquareVector;
 	}
@@ -205,11 +199,6 @@ public class FeatureVector {
 		varianceVector.add((sumQuadrat2-(counter2*Math.pow(sum2 / counter2,2)))/(counter2 -1));
 		varianceVector.add((sumQuadrat3-(counter3*Math.pow(sum3 / counter3,2)))/(counter3 -1));
 		
-		stdDevationVector.add(Math.sqrt((sumQuadrat-(counter*Math.pow(sum / counter,2)))/(counter -1)));
-		stdDevationVector.add(Math.sqrt((sumQuadrat1-(counter1*Math.pow(sum1 / counter1,2)))/(counter1 -1)));
-		stdDevationVector.add(Math.sqrt((sumQuadrat2-(counter2*Math.pow(sum2 / counter2,2)))/(counter2 -1))); 
-		stdDevationVector.add(Math.sqrt((sumQuadrat3-(counter3*Math.pow(sum3 / counter3,2)))/(counter3 -1)));
-		
 		averageVector.add(sum / counter);
 		averageVector.add(sum1 / counter1);
 		averageVector.add(sum2 / counter2);
@@ -217,7 +206,6 @@ public class FeatureVector {
 		
 		wedgesVector.add(averageVector);
 		wedgesVector.add(varianceVector);
-		wedgesVector.add(stdDevationVector);
 		return wedgesVector;
 	}
 	

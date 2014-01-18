@@ -110,7 +110,7 @@ public class Wedges {
 		allFeatures.add(varianceFeatures);
 		allFeatures.add(standardDegressionFeatures);
 		long stop = System.currentTimeMillis();
-		System.out.println(" \n ** FV extraction took approx. " + (stop - start) + " ms. **");
+//		System.out.println(" \n ** FV extraction took approx. " + (stop - start) + " ms. **");
 		return allFeatures;
 	}
 	
