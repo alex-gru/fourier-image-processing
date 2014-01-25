@@ -30,15 +30,13 @@ public class ImageCreator {
 			images.addAll(createImages(i,magOrPhase,colorChannel));
 			System.out.println("added patientID: "+i);
 		}
-//		images.addAll(createImages(14,magOrPhase,colorChannel));
-//		images.addAll(createImages(16,magOrPhase,colorChannel));
 		return images;
 	}
 	
 	public static ArrayList<Image> createImages(int patientID,int magOrPhase, int colorChannel) throws Exception{
 		ArrayList<Image> images = new ArrayList<Image>();
 		String select;
-		select = "SELECT * from patientdata where patientid="+patientID+
+		select = "SELECT DISTINCT ON (imagename,magorphase,colorchannel) * from patientdata where patientid="+patientID+
 				 "AND magorphase="+magOrPhase+" AND colorchannel="+colorChannel+";";
 		Connection conn = DBConnector.getConnection();
 		Statement st = conn.createStatement();
